@@ -54,7 +54,12 @@ services:
     depends_on:
       api: { condition: service_healthy }
     volumes: [private_media:/app/media]
-    healthcheck: { disable: true }
+    healthcheck:
+      test: [CMD-SHELL, 'celery -A config inspect ping --destination "celery@$$HOSTNAME" --timeout 5 | grep -q pong']
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 15s
   frontend:
     build: { context: frontend }
     environment: { DJANGO_API_BASE_URL: http://api:8000/api/v1, NEXT_PUBLIC_APP_NAME: studyEase }
