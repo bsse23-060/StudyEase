@@ -69,8 +69,8 @@ jobs:
       - run: docker compose --profile s3 --profile scanner -f docker-compose.yml -f docker-compose.integration.yml up --build --wait
       - run: pwsh scripts/smoke_test.ps1
       - run: docker compose exec -T api python manage.py seed_demo
-      - run: pwsh scripts/api_walkthrough.ps1
-      - run: pwsh scripts/rag_walkthrough.ps1
+      - run: pwsh scripts/api_walkthrough.ps1 -BaseUrl http://localhost:8080
+      - run: pwsh scripts/rag_walkthrough.ps1 -BaseUrl http://localhost:8080
       - run: npm run test:e2e
         working-directory: frontend
         env: { PLAYWRIGHT_EXTERNAL_SERVER: "1", PLAYWRIGHT_BASE_URL: "http://localhost:8080" }
