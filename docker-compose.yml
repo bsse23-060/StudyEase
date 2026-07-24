@@ -1,0 +1,75 @@
+name: studyease
+x-api-env: &api-env
+  DJANGO_ENV: development
+  DJANGO_SECRET_KEY: local-only-compose-secret-change-before-deployment
+  DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,api,proxy
+  DATABASE_URL: postgres://studyease:studyease@postgres:5432/studyease
+  CELERY_BROKER_URL: redis://redis:6379/0
+  CELERY_RESULT_BACKEND: redis://redis:6379/1
+  CELERY_TASK_ALWAYS_EAGER: "false"
+  MALWARE_SCANNER: fake
+  RAG_EMBEDDING_PROVIDER: fake
+  RAG_LANGUAGE_MODEL_PROVIDER: fake
+  RAG_VECTOR_BACKEND: pgvector
+  RAG_VECTOR_DIMENSIONS: 1536
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment: { POSTGRES_DB: studyease, POSTGRES_USER: studyease, POSTGRES_PASSWORD: studyease }
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck: { test: [CMD-SHELL, "pg_isready -U studyease -d studyease"], interval: 5s, timeout: 5s, retries: 20 }
+  redis:
+    image: redis:7.4-alpine
+    command: [redis-server, --appendonly, "yes", --maxmemory-policy, noeviction]
+    volumes: [redis_data:/data]
+    healthcheck: { test: [CMD, redis-cli, ping], interval: 5s, timeout: 3s, retries: 20 }
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    profiles: [s3]
+    command: [server, /data, --console-address, ":9001"]
+    environment: { MINIO_ROOT_USER: localstudyease, MINIO_ROOT_PASSWORD: localstudyeasechange }
+    volumes: [minio_data:/data]
+    healthcheck: { test: [CMD, mc, ready, local], interval: 5s, timeout: 5s, retries: 20 }
+  minio-init:
+    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+    profiles: [s3]
+    depends_on: { minio: { condition: service_healthy } }
+    entrypoint: [sh, -c, "mc alias set local http://minio:9000 localstudyease localstudyeasechange && mc mb --ignore-existing local/studyease-private && mc anonymous set none local/studyease-private"]
+  clamav:
+    image: clamav/clamav:1.4
+    profiles: [scanner]
+    volumes: [clamav_data:/var/lib/clamav]
+    healthcheck: { test: [CMD, clamdscan, --ping, "1"], interval: 10s, timeout: 5s, retries: 30, start_period: 60s }
+  api:
+    build: .
+    environment: { <<: *api-env, RUN_MIGRATIONS: "true", COLLECT_STATIC: "true" }
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    volumes: [private_media:/app/media]
+  worker:
+    build: .
+    command: [celery, -A, config, worker, -l, INFO, -Q, "default,documents", --concurrency=2]
+    environment: { <<: *api-env, COLLECT_STATIC: "false" }
+    depends_on:
+      api: { condition: service_healthy }
+    volumes: [private_media:/app/media]
+    healthcheck:
+      test: [CMD-SHELL, 'celery -A config inspect ping --destination "celery@$$HOSTNAME" --timeout 5 | grep -q pong']
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 15s
+  frontend:
+    build: { context: frontend }
+    environment: { DJANGO_API_BASE_URL: http://api:8000/api/v1, NEXT_PUBLIC_APP_NAME: studyEase }
+    depends_on: { api: { condition: service_healthy } }
+  proxy:
+    image: studyease-proxy
+    build: { context: ops/nginx }
+    ports: ["8080:8080"]
+    volumes:
+      - ./ops/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ops/nginx/proxy_params:/etc/nginx/proxy_params:ro
+    depends_on: { frontend: { condition: service_healthy }, api: { condition: service_healthy } }
+volumes: { postgres_data: {}, redis_data: {}, private_media: {}, minio_data: {}, clamav_data: {} }

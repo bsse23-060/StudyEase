@@ -1,0 +1,11 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Next.js-generated opaque action identifiers confirmed in historical build manifests"
+paths = [
+  '''^frontend/\.next/(dev/)?prerender-manifest\.json$''',
+  '''^frontend/\.next/(dev/)?server/server-reference-manifest\.json$''',
+  '''^frontend/\.next/(dev/)?cache/\.(previewinfo|rscinfo)$''',
+  '''^frontend/\.next/standalone/\.next/(prerender-manifest|server/server-reference-manifest)\.json$'''
+]

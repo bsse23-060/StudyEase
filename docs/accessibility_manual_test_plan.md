@@ -1,0 +1,5 @@
+# Manual accessibility sign-off plan
+
+Automated axe/Playwright results are evidence but not manual sign-off. On each supported browser, test keyboard-only navigation (skip links, visible focus, no traps), Windows high contrast, reduced motion, and 200%/400% zoom without two-dimensional scrolling. With NVDA/Firefox or Chrome, VoiceOver/Safari on macOS/iOS, and TalkBack/Chrome, verify landmarks, headings, names/roles/states, live errors, tables, dialogs, and reading order.
+
+Complete login/registration errors, course catalogue/detail, instructor builder, archive/restore confirmation, quiz instructions/answers/results, flashcard reveal/review, weekly/upcoming schedule and overlap warning acknowledgement, document upload/scan/status/error, RAG chat streaming/status, and citation navigation. Confirm dialog focus enters, is trapped, returns to trigger, and Escape behaves safely. Record device/AT/browser/version, journey, outcome, screenshot or issue, severity, tester, and date. No manual checks are claimed complete by this document.
