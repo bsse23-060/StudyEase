@@ -29,3 +29,4 @@ If the daemon is stopped, start Docker Desktop from the Start menu and wait for 
 ## Approval-required escalation
 
 Do not silently use “Reset to factory defaults”, remove Docker credentials, reinstall Docker Desktop, reset Windows networking, disable a VPN/firewall, run `wsl --shutdown`, or delete WSL distributions. Capture `docker info`, DNS/TCP results and Docker Desktop diagnostics, then obtain human approval. A temporary Hub outage should be verified against Docker status and retried before local resets.
+

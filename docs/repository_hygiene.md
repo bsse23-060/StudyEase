@@ -18,3 +18,4 @@ Set-Location frontend; npm run api:types; git diff --exit-code src/types/api.gen
 ```
 
 Runtime data belongs in named Docker volumes. Backups belong in `backups/` and require separate protected retention. Never commit `.env`, uploads, database/Redis/MinIO/ClamAV data, scan reports, traces, logs or generated build directories.
+
