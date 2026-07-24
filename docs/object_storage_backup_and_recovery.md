@@ -1,0 +1,7 @@
+# Object-storage backup and recovery
+
+PostgreSQL dumps do not contain uploaded objects. Run `scripts/backup_minio.ps1` separately with scoped credentials supplied through `STUDYEASE_MINIO_ACCESS_KEY` and `STUDYEASE_MINIO_SECRET_KEY`. The script creates a non-overwriting timestamp directory under ignored `backups/objects`, mirrors object metadata, and creates a SHA-256 inventory. Treat the destination as sensitive: encrypt it at rest, restrict access, copy it off-host, apply retention, and enable versioning/object lock on the production destination where policy requires it.
+
+Restore with `scripts/restore_minio.ps1 -Input <backup-directory> -TargetBucket <isolated-bucket>`. It verifies local checksums, creates a private isolated bucket, and mirrors objects without exposing credentials in source files. Verify source/restored object counts and sample `mc stat` ETags; multipart ETags are not content hashes, so retain the SHA-256 inventory.
+
+Database and object backups must share a recovery label/time window. Restore objects first or configure the application to remain unavailable until both stores are consistent. Embeddings and HNSW indexes are regenerable from clean source objects, but user uploads, quiz/learning records, conversations, citations and audit records are not universally regenerable. Already-issued signed URLs remain usable only until expiry unless their object is removed; restoring an object under the same key can make an unexpired URL usable again, so restore into an isolated bucket and change application configuration only after approval.

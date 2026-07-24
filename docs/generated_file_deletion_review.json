@@ -1,0 +1,32 @@
+{
+  "reviewed_commit": "98e9f8f9",
+  "parent": "98e9f8f9^",
+  "total_deleted": 36006,
+  "categories": {
+    "installed_dependencies": 32868,
+    "generated_next_build_output": 3136,
+    "typescript_build_metadata": 1,
+    "coverage_database": 1
+  },
+  "paths": {
+    "frontend/node_modules": 32868,
+    "frontend/.next": 3136,
+    "frontend/tsconfig.tsbuildinfo": 1,
+    ".coverage": 1
+  },
+  "top_extensions": {
+    ".js": 17086,
+    ".map": 6370,
+    ".ts": 5956,
+    ".json": 1730,
+    ".md": 1260,
+    "[none]": 631,
+    ".mjs": 577,
+    ".cjs": 550,
+    ".rsc": 282,
+    ".cts": 259
+  },
+  "deleted_outside_allowlist": 0,
+  "source_files_restored": 0,
+  "conclusion": "safe"
+}

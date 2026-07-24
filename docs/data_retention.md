@@ -1,0 +1,5 @@
+# Data retention and privacy controls
+
+Policy defaults pending legal/product approval: security audit records 365 days; operational task/log records 30/14 days; provider usage 90 days; quarantined files 30 days; archived courses and educational attempts retained until an authorised institutional deletion decision. Users may soft-delete documents and conversations; object deletion follows a recovery grace period. Account deletion must anonymise identity while retaining required quiz/course history, and must not cascade protected citations. Course archival is not deletion.
+
+Scheduled maintenance should purge expired tokens, old non-security logs, expired quarantine objects, and deleted personal content after the grace period, recording aggregate results. AI prompts/document text must not be placed in logs or metric labels. Formal data-subject workflows, residency, consent, and legal holds remain future review items. These controls may support, but do not claim, GDPR, FERPA, HIPAA, or other compliance.
