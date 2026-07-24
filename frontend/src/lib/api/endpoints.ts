@@ -1,0 +1,27 @@
+export const endpoints = {
+  me: "auth/me/",
+  courses: "courses/",
+  modules: "modules/",
+  lessons: "lessons/",
+  questions: "questions/",
+  quizzes: "quizzes/",
+  quizOptions: "quiz-options/",
+  quizSubmissions: "quiz-submissions/",
+  concepts: "concepts/",
+  enrollments: "enrollments/",
+  profiles: "learning-profiles/",
+  masteries: "masteries/",
+  attempts: "attempts/",
+  roadmap: "roadmap-steps/",
+  events: "events/",
+  documents: "documents/",
+  chunks: "document-chunks/",
+  conversations: "conversations/",
+  decks: "flashcard-decks/",
+  cards: "flashcards/",
+  routines: "routines/",
+  blocks: "schedule-blocks/",
+  users: "users/",
+} as const;
+export const detail = (resource: string, id: number | string) =>
+  `${resource}${id}/`;
