@@ -57,7 +57,7 @@ jobs:
         with: { python-version: "3.12", cache: pip }
       - run: pip install -r requirements-dev.txt
       - run: python manage.py migrate --noinput && python manage.py check
-      - run: python manage.py test study_tools
+      - run: RAG_VECTOR_BACKEND=database RAG_VECTOR_DIMENSIONS=64 python manage.py test study_tools
   e2e:
     runs-on: ubuntu-latest
     steps:
@@ -93,5 +93,7 @@ jobs:
       - run: npm ci && npm audit --audit-level=high
         working-directory: frontend
       - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: aquasecurity/trivy-action@master
         with: { scan-type: fs, scan-ref: ., severity: CRITICAL,HIGH, exit-code: "1" }
