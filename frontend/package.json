@@ -20,7 +20,7 @@
     "@tanstack/react-query": "5.101.3",
     "clsx": "2.1.1",
     "lucide-react": "0.468.0",
-    "next": "16.2.10",
+    "next": "16.2.11",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-hook-form": "7.82.0",
@@ -50,6 +50,7 @@
   },
   "overrides": {
     "js-yaml": "4.3.0",
-    "postcss": "8.5.21"
+    "postcss": "8.5.21",
+    "sharp": "0.35.3"
   }
 }
