@@ -1,0 +1,35 @@
+services:
+  api:
+    environment:
+      DJANGO_ENV: production
+      DJANGO_DEBUG: "false"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?required}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?required}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:?required}
+      DATABASE_URL: ${DATABASE_URL:?required}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL:?required}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND:?required}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME:?required}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:?required}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:?required}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL:-}
+      MALWARE_SCANNER: ${MALWARE_SCANNER:-clamav}
+      CLAMAV_HOST: ${CLAMAV_HOST:-clamav}
+      RUN_MIGRATIONS: "false"
+  worker:
+    environment:
+      DJANGO_ENV: production
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?required}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?required}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:?required}
+      DATABASE_URL: ${DATABASE_URL:?required}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL:?required}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND:?required}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME:?required}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:?required}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:?required}
+      MALWARE_SCANNER: ${MALWARE_SCANNER:-clamav}
+  clamav:
+    image: clamav/clamav:1.4
+    profiles: []
+    volumes: [clamav_data:/var/lib/clamav]
